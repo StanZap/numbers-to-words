@@ -1,0 +1,23 @@
+{
+  "name": "numbers-to-words",
+  "version": "0.1.0",
+  "description": "A numbers to words app that only display numbers at screen.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrszapata/numbers-to-words.git"
+  },
+  "author": "Junior Zapata <jrszapata@hotmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jrszapata/numbers-to-words/issues"
+  },
+  "homepage": "https://github.com/jrszapata/numbers-to-words#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}

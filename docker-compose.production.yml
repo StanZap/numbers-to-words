@@ -1,0 +1,7 @@
+version: "2"
+services:
+  web:
+    container_name: numbers_to_words
+    image: jrszapata/numbers_to_words
+    ports:
+      - 80:80
