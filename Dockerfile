@@ -4,4 +4,9 @@ ADD $PWD /var/www/html
 
 WORKDIR /var/www/html
 
-CMD npm start;
+CMD if [ -e "package.json" ]; then \
+      if [ ! -e "node_modules" ]; then \
+        npm install; \
+      fi; \
+    fi; \
+    npm start;
