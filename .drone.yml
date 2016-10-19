@@ -1,0 +1,5 @@
+pipeline:
+  web:
+    image: node:latest
+    commands:
+      - npm install

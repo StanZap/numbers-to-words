@@ -1,10 +1,9 @@
 version: "2"
 services:
   web:
-    container_name: numbers_to_words
-    image: numbers_to_words
+    image: numbers2words
     build: .
     volumes: 
       - ./:/var/www/html
     ports:
-      - 80:80
+      - 8095:80
