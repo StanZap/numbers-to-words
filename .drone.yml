@@ -1,13 +1,5 @@
 pipeline:
-  web:
+  build:
     image: node:latest
     commands:
       - echo "npm install takes too long"
-
-publish:
-  docker:
-    repo: jrszapata/numbers-to-words
-    tag: latest      
-    username: jrszapata
-    password: $$DOCKER_PASSWORD
-  
