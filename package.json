@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jrszapata/numbers-to-words#readme",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "handlebars": "^4.0.5"
   }
 }

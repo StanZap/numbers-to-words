@@ -47,6 +47,13 @@
 			color: #999;
 		}
 
+		#hostname {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			font-size: 2rem;
+			font-weight: bold;
+		}
 
 	</style>
 
@@ -57,6 +64,8 @@
 			  crossorigin="anonymous"></script>
 </head>
 <body>
+
+	<div id="hostname">Hostname: {{ hostname }}</div>
 	<div id="numberLabel">
 		<h1 id="numberInSymbols"></h1>
 		<h4 id="numberInWords"></h4>
