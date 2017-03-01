@@ -1,0 +1,15 @@
+version: "2"
+services:
+  web:
+    image: jrszapata/numbers-to-words
+    expose:
+      - 80
+    environment:
+      - VIRTUAL_HOST=numbers.dev,www.numbers.dev
+    networks:
+      - proxy
+
+networks:
+  proxy:  
+    external:
+      name: prx_proxy_net

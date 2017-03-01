@@ -1,7 +1,7 @@
 version: "2"
 services:
   web:
-    image: numbers-to-words
+    image: jrszapata/numbers-to-words
     build: .
     volumes: 
       - ./:/var/www/html
