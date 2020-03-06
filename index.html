@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Numbers in spanish</title>
+	<meta charset="utf-8" /> 
+	<style type="text/css">
+		
+		body {
+			background-color: black;
+			margin: 0; padding: 0;
+			position: relative;
+		}
+
+		#numberLabel {
+	        position: fixed;
+	        top: 50%;
+	        left: 50%;
+	        transform: translate(-50%, -50%);
+			font-size: 2rem;
+			text-align: center
+		}
+
+		#numberLabel h3,h2,h4 {
+			color: #555;
+			opacity: 0.1;
+		}
+
+		#numberLabel h4:hover{
+			opacity: 1;
+		}
+
+		#level  {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+		}
+
+		#level .number {
+			font-size: 3rem;
+		}
+
+		#level .fa {
+			font-size: 3rem;
+			cursor: pointer;
+		}
+		.disabled {
+			color: #999;
+		}
+
+		#hostname {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			font-size: 1.5rem;
+			font-weight: normal;
+		}
+
+	</style>
+
+	<script src="https://use.fontawesome.com/71f3a946c5.js"></script>
+
+	<script src="http://code.jquery.com/jquery-3.0.0.min.js"
+			  integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="
+			  crossorigin="anonymous"></script>
+</head>
+<body>
+
+	<div id="hostname">Hostname: {{ hostname }}</div>
+	<div id="numberLabel">
+		<h1 id="numberInSymbols"></h1>
+		<h4 id="numberInWords"></h4>
+	</div>
+
+	<div id="level"> 
+		<i class="fa fa-chevron-up" onClick="levelUp()"></i>
+		<span class="number">1</span>
+		<i class="fa fa-chevron-down" onClick="levelDown()"></i>
+	</div>
+
+	<script type="text/javascript">
+		var colors = [
+			'#EFA9FE',
+			'#FFEEFB',
+			'#DDCEFF',
+			'#FF8A8A',
+			'#6094DB',
+			"#EFD7FF",
+			"#FF86FF",
+			"#F4D2F4",
+			"#75B4FF",
+			"#4BFE78",
+			"#BDFFEA",
+			"#01F33E",
+			"#01FCEF",
+			"#1FCB4A",
+			"#48FB0D",
+			"#9D9D00",
+		];
+
+		var basics = [
+			{symbolic: 0, words: 'cero'},
+			{symbolic: 1, words: 'uno'},
+			{symbolic: 2, words: 'dos'},
+			{symbolic: 3, words: 'tres'},
+			{symbolic: 4, words: 'cuatro'},
+			{symbolic: 5, words: 'cinco'},
+			{symbolic: 6, words: 'seis'},
+			{symbolic: 7, words: 'siete'},
+			{symbolic: 8, words: 'ocho'},
+			{symbolic: 9, words: 'nueve'},
+
+			{symbolic: 10, words: 'diez'},
+			{symbolic: 11, words: 'once'},
+			{symbolic: 12, words: 'doce'},
+			{symbolic: 13, words: 'tre'},
+			{symbolic: 14, words: 'catorce'},
+			{symbolic: 15, words: 'quince'},
+			{symbolic: 16, words: 'dieciseis'},
+			{symbolic: 17, words: 'diecisiete'},
+			{symbolic: 18, words: 'dieciocho'},
+			{symbolic: 19, words: 'diecinueve'},
+
+			{symbolic: 20, words: 'veinte'},
+			{symbolic: 21, words: 'veintiuno'},
+			{symbolic: 22, words: 'veintidos'},
+			{symbolic: 23, words: 'veintitres'},
+			{symbolic: 24, words: 'veinticuatro'},
+			{symbolic: 25, words: 'venticinco'},
+			{symbolic: 26, words: 'veintiseis'},
+			{symbolic: 27, words: 'veintisiete'},
+			{symbolic: 28, words: 'veintiocho'},
+			{symbolic: 29, words: 'veintinueve'},
+
+		];
+
+		var tens = [
+			{symbolic: 10, words: 'treinta'},
+			{symbolic: 20, words: 'treinta'},
+			{symbolic: 30, words: 'treinta'},
+			{symbolic: 40, words: 'cuarenta'},
+			{symbolic: 50, words: 'cincuenta'},
+			{symbolic: 60, words: 'sesenta'},
+			{symbolic: 70, words: 'setenta'},
+			{symbolic: 80, words: 'ochenta'},
+			{symbolic: 90, words: 'noventa'},
+		];
+
+		var hundreds = [
+			{symbolic: 100, words: 'cien(to)', approach: 'ciento'},
+			{symbolic: 200, words: 'docientos'},
+			{symbolic: 300, words: 'trecientos'},
+			{symbolic: 400, words: 'cuatrocientos'},
+			{symbolic: 500, words: 'quinientos'},
+			{symbolic: 600, words: 'seiscientos'},
+			{symbolic: 700, words: 'setencientos'},
+			{symbolic: 800, words: 'ochocientos'},
+			{symbolic: 900, words: 'novecientos'},
+		];
+
+		var thousand = {symbolic: 1000, words: 'mil'},
+			million = {symbolic: 1000000, words: 'millón', plural: 'millones'},
+			billion = {symbolic: 1000000000000, words: 'billón', plural: 'billones'};
+
+
+
+		function getWordsFromNumber(_number){
+			var _numberString = _number.toString();
+			var _size = _numberString.length;
+			var _words;
+
+			if( _size === 1){
+				_words = getFirsts(_number, _numberString);
+			} else if(_size === 2){
+				_words = getTens(_number, _numberString);
+			} else if(_size === 3) {
+				_words = getHundreds(_number, _numberString);
+			} else if(_size  > 3 && _size <= 6){
+				_words = getThousands(_number, _numberString);
+			} else if(_size  > 6 && _size <= 12){
+				_words = getMillions(_number, _numberString);
+			}
+
+			return _words
+				.replace('uno mil', 'mil') // This produces unexpected result when 261,000 -> "docientos sesenta y uno mill" ya que se elimina el uno leyendo como 260 mil
+				.replace('uno millon(es)', 'un millon')
+				.replace('uno billon(es)', 'un billon')
+		}
+
+		function getFirsts(_number, _numberString) {
+			return basics[_number].words;
+		}
+
+		function getTens(_number, _numberString){
+			console.log('Ten. Number: ' + _number)
+			if(_number >= 0 && _number < 30){
+				var info = basics.find(function(o, i){
+					if(o.symbolic === _number) return true;
+				});
+
+				return info.words;
+			} 
+
+			var tenObj = tens.find(function(o, i){
+				if(_number >= o.symbolic && _number < o.symbolic+10) return true;
+			});
+
+			var ten = tenObj.words;
+
+			if(_number % 10 > 0) {
+				ten += ' y ' +  basics[_numberString[1]].words;
+			}
+
+			return ten;
+		}
+
+		function getHundreds(_number, _numberString){
+
+			var _size = _numberString.length;
+
+			if(_size < 3){
+				return getTens(_number, _numberString)
+			}
+
+			console.log("getHundreds. Number: "+ _number, "Size: "+ _size);
+			var hundredObj = hundreds.find(function(o, i){
+				if(_number >= o.symbolic && _number < o.symbolic+100) {
+					return true;
+				}
+			});
+
+
+			var hundred = hundredObj.words;
+
+			if(_number % 100 > 0){;
+				var nextNum = parseInt(_numberString.substr(1, _size));
+				hundred += ' ' + getTens(nextNum, nextNum.toString());
+			}
+			return hundred;
+		}
+
+		function getThousands(_number, _numberString) {
+
+			var _size = _numberString.length;
+			if(_size < 4){
+				return getHundreds(_number, _numberString)
+			}
+			
+			var hundred = parseInt(_numberString.substr(_size - 3));
+			var thousand = parseInt(_numberString.substr(0, _size - 3));
+			if(thousand != parseInt(thousand).toString()){
+				alert('Num: '+parseInt(thousand) + '; Size: '+thousand.length)
+				alert('Num: '+parseInt(thousand) + '; Size: '+thousand.trim().length)
+			}
+
+
+			console.log("getThousands. Number: "+ thousand, "Size: "+ thousand);
+			return getHundreds(thousand, thousand.toString()) + ' mil ' +  getHundreds(hundred, hundred.toString());
+		}
+
+		function getMillions(_number, _numberString) {
+			var _size = _numberString.length;
+
+			var thousand = parseInt(_numberString.substr(_size - 6));
+			var million = parseInt(_numberString.substr(0, _size - 6));
+			return getThousands(million, million.toString()) + ' millon(es) ' +  getThousands(thousand, thousand.toString());			
+		}
+
+		function getNumberPresentation(_numberString) {
+			var i = 0;
+			var presentation = '';
+
+			_numberString.toString().split('').reverse().forEach(function(v, i){
+				presentation = v + presentation;
+
+				if((i+1) % 3 === 0) {
+					presentation = ',' + presentation;
+				}
+			})
+
+			return presentation.replace(/^\,/, '');
+
+		}
+
+		function slide(){
+			var min = Math.pow(10, levels[currentLevel-1].minDigits);
+			var max = Math.pow(10, levels[currentLevel-1].maxDigits);
+			var randomNumber = Math.floor( min + (Math.random() * (max - min)));
+
+			$('#numberInSymbols').text(getNumberPresentation(randomNumber));
+			$('#numberInWords').text(getWordsFromNumber(randomNumber));
+
+			var colorIndex = parseInt(Math.floor((Math.random() * colors.length)))
+			$('body').css({'background-color': colors[colorIndex]});
+
+		}
+
+		var currentLevel = 1;
+
+		var levels = [
+			{speed: 2, minDigits: 0, maxDigits: 1},
+			{speed: 4, minDigits: 1, maxDigits: 2},
+			{speed: 8, minDigits: 2, maxDigits: 3},
+			{speed: 10, minDigits: 3, maxDigits: 4},
+			{speed: 13, minDigits: 4, maxDigits: 5},
+			{speed: 15, minDigits: 5, maxDigits: 6},
+			{speed: 17, minDigits: 6, maxDigits: 7},
+			{speed: 19, minDigits: 7, maxDigits: 8},
+			{speed: 20, minDigits: 8, maxDigits: 9},
+			{speed: 21, minDigits: 9, maxDigits: 10},
+			{speed: 22, minDigits: 10, maxDigits: 11},
+			{speed: 23, minDigits: 11, maxDigits: 12},
+		];
+
+		function levelUp() {
+			if(currentLevel < levels.length){
+				currentLevel++;
+				$('#level .number').text(currentLevel);
+				refreshLevelView();
+				refreshSlide();
+			} 
+
+		}
+
+		function levelDown() {
+			if(currentLevel > 1){
+				currentLevel--;
+				$('#level .number').text(currentLevel);
+				refreshLevelView();
+				refreshSlide();
+			} 
+
+		}
+
+		function refreshLevelView() {
+			if(currentLevel === 1){
+				$('#level .fa-chevron-down').addClass('disabled');
+			} else if(currentLevel === levels.length) {
+				$('#level .fa-chevron-up').addClass('disabled');
+			} else {
+				$('#level .fa-chevron-up').removeClass('disabled');
+				$('#level .fa-chevron-down').removeClass('disabled');
+			}
+		}
+
+		var interval;
+		function refreshSlide() {
+			if(interval){
+				clearInterval(interval);
+			}
+
+			slide();
+			interval = setInterval(slide, levels[currentLevel-1].speed * 1000);
+		}
+
+
+		refreshLevelView();		
+		refreshSlide();
+
+	</script>
+</body> 
+</html>
